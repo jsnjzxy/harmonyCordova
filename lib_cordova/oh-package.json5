@@ -1,12 +1,11 @@
 {
-  "name": "entry",
+  "name": "lib_cordova",
   "version": "1.0.0",
   "description": "Please describe the basic information.",
-  "main": "",
+  "main": "Index.ets",
   "author": "",
-  "license": "",
+  "license": "Apache-2.0",
   "dependencies": {
-    "lib_cordova": "file:../lib_cordova"
+    "reflect-metadata": "^0.1.13"
   }
 }
-

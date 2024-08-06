@@ -30,6 +30,10 @@
           ]
         }
       ]
+    },
+    {
+      "name": "lib_cordova",
+      "srcPath": "./lib_cordova",
     }
   ]
 }

@@ -1,20 +1,44 @@
+import webview from '@ohos.web.webview'
+import { BusinessError } from '@ohos.base';
+
+import { BMCordovaWebViewProxy } from '../cordova/BMCordovaWebViewProxy';
+
 @Entry
 @Component
-struct Index {
-  @State message: string = 'Hello World';
+export struct WebTestPage {
+  controller: BMCordovaWebViewProxy = BMCordovaWebViewProxy.createController();
+
+  aboutToAppear(): void {
+    try {
+      // 启用网页调试功能
+      webview.WebviewController.setWebDebuggingAccess(true);
+    } catch (error) {
+      let e: BusinessError = error as BusinessError;
+      console.log(`Error Code: ${e.code}, Message: ${e.message}`);
+      this.controller.refresh(); // 页面异常,刷新
+    }
+  }
+
 
   build() {
-    RelativeContainer() {
-      Text(this.message)
-        .id('HelloWorld')
-        .fontSize(50)
-        .fontWeight(FontWeight.Bold)
-        .alignRules({
-          center: { anchor: '__container__', align: VerticalAlign.Center },
-          middle: { anchor: '__container__', align: HorizontalAlign.Center }
-        })
+    Row() {
+      Column({ space: 20 }) {
+        Web({ src: $rawfile('www/index.html'), controller: this.controller.getWebViewController() })
+          .onControllerAttached(() => {
+            this.controller.onControllerAttached();
+          })
+          .javaScriptAccess(true)
+          .javaScriptProxy(this.controller.javaScriptProxy)
+          .onAlert((event) => {
+            this.controller.onJsAlert(event);
+            return true;
+          })
+          .onPrompt((event) => {
+            this.controller.onJsPrompt(event);
+            return true;
+          })
+
+      }.width('100%').height('100%')
     }
-    .height('100%')
-    .width('100%')
   }
 }
